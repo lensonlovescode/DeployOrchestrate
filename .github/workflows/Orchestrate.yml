@@ -1,0 +1,33 @@
+name: Deploy and Orchestrate with minukibe
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: check out scripts
+        uses: actions/checkout@v4
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "applyManifests.pp, serverSetup.pp"
+          target: "~/puppetManifests"
+          
+      - name: Apply manifests
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo puppet apply ~/puppetManifests/serverSetup.pp
+            sudo puppet apply ~/puppetManifests/applyManifests.pp
