@@ -2,11 +2,12 @@
 #  1. updates the server
 #  2. Installs and runs nginx
 #  3. Installs and runs Docker
-#  4. Ensures Minikube is installed
-#  5. Ensures Minikube is running with one control node and one worker node
+#  4. Adds the current user to the docker group
+#  5. Ensures Minikube is installed
+#  6. Ensures Minikube is running with one control node and one worker node
 
 exec { 'update':
-  command  => '/usr/bin/apt-get update',
+  command  => 'apt update',
   provider => 'shell'
 }
 
@@ -26,10 +27,16 @@ package {'docker-ce':
   require => Service['nginx']
 }
 
+exec { 'add user to docker group':
+  command => 'usermod -aG docker $SUDO_USER',
+  unless => 'id -nG $SUDO_USER | grep -q "docker"',
+  path => ['/usr/bin', '/bin', '/usr/local/bin']
+}
+
 service {'docker':
   ensure => running,
   enable => true,
-  require => Package['docker']
+  require => Package['docker-ce']
 }
 
 exec {'install minikube':
@@ -42,12 +49,12 @@ exec {'install minikube':
 exec {'install kubectl':
   command => 'curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl &&
              install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && rm kubectl',
-  unless => 'command -v kubectl',
+  unless => 'which kubectl',
   path => ['/usr/bin', '/bin', '/usr/local/bin'],
 }
 
 exec {'start cluster':
-  command => 'minikube start',
+  command => 'su -l $SUDO_USER -c "minikube start"',
   unless => 'minikube status | grep -q Running',
   path => ['/usr/bin', '/bin', '/usr/local/bin'],
 }
