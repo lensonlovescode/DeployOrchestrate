@@ -23,7 +23,7 @@ service {'nginx':
 
 package {'docker-ce':
   ensure => 'installed',
-  require => service['nginx']
+  require => Service['nginx']
 }
 
 service {'docker':

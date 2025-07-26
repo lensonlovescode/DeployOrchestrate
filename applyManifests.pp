@@ -2,5 +2,5 @@
 
 exec {'apply manifests':
   command => 'kubectl apply -f /MinikubeManifests',
-  path => ['/usr/bin', '/bin, '/usr/local/bin'],
+  path => ['/usr/bin', '/bin', '/usr/local/bin'],
 }
