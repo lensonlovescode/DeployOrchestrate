@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopture-fe-deployment
+  labels:
+    app: shopture-fe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopture-fe
+  template:
+    metadata:
+      labels:
+        app: shopture-fe
+    spec:
+      containers:
+        - name: shopture-fe
+          image: ghcr.io/whoismacy/shopture-fe:latest   
+          ports:
+            - containerPort: 9090
