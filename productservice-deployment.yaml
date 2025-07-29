@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productservice-deployment
+  labels:
+    app: productservice
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: productservice
+  template:
+    metadata:
+      labels:
+        app: productservice
+    spec:
+      containers:
+        - name: productservice
+          image: ghcr.io/lensonlovescode/productservice:latest 
+          ports:
+            - containerPort: 3000
