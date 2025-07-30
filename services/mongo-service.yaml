@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongoservice
+spec:
+  clusterIP: None
+  selector:
+    app: mongoservice
+  ports:
+    - port: 27017

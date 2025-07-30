@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: frontend-shopture-ingress
+  name: ingress
 spec:
   rules:
     - host: "select-a-domain.com" # not yet implemented
@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: frontend-shopture-service
+                name: frontendservice
                 port:
                   number: 80
