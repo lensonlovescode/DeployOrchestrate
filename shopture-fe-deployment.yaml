@@ -16,6 +16,7 @@ spec:
     spec:
       containers:
         - name: shopture-fe
-          image: ghcr.io/whoismacy/shopture-fe:latest   
+          image: rosesanddaisies/frontend-shopture
+          imagePullPolicy: Always
           ports:
             - containerPort: 9090
